@@ -2,23 +2,19 @@
 
 Provide extensions for plugins to inject code to specified locations (if the theme provides corresponding injection points)
 
+![npm](https://img.shields.io/npm/v/hexo-extend-injector2.svg)
+
 [中文文档](README-ZH.md)
 
-## how to use
+## plugin developer
 
-Install it in your plugin
+### install
+
 ```bash
 yarn add hexo-extend-injector2
 ```
 
-Get injector by `require()`
-
-```js
-const injector = require('hexo-extend-injector2')(hexo);
-injector.register('body-end', 'maybe a js script.');
-```
-
-## API
+### use
 
 ```js
 const injector = require ('hexo-extend-injector2')(hexo);

@@ -2,22 +2,17 @@
 
 为插件提供扩展，能将代码注入到指定位置（如果主题提供相应的注入点）
 
-## how to use
+![npm](https://img.shields.io/npm/v/hexo-extend-injector2.svg)
 
-在需要使用的插件中安装
+## plugin developer
+
+### install
 
 ```bash
 yarn add hexo-extend-injector2
 ```
 
-通过`require()`引入injector使用
-
-```js
-const injector = require('hexo-extend-injector2')(hexo);
-injector.register('body-end', 'maybe a js script.');
-```
-
-## API
+### use
 
 ```js
 const injector = require('hexo-extend-injector2')(hexo);
