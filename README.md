@@ -6,7 +6,7 @@ Provide extensions for plugins to inject code to specified locations (if the the
 
 ## how to use
 
-Install this plugin
+Install it in your plugin
 ```bash
 yarn add hexo-extend-injector2
 ```
@@ -105,9 +105,9 @@ Helper can be used to specify the injection point in the theme's layout file, fo
 </html>
 ```
 
-injector(entry).list(): Get all injection objects of this injection point  
-injector(entry).rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)  
-injector(entry).text(): render and merge all the injected content of this injection point  
+- injector(entry).list(): Get all injection objects of this injection point  
+- injector(entry).rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)  
+- injector(entry).text(): render and merge all the injected content of this injection point  
 
 ### stylus injector
 
@@ -130,7 +130,7 @@ injector('style')
 
 ### NexT plugin
 
-> In the future, NexT may adjust the injection method
+> In the future, NexT may adjust the injection way
 
 The NexT theme has been tried for plugins. If you want to use its plugin in your theme, configure it as follows
 

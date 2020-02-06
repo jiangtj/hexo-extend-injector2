@@ -104,9 +104,9 @@ hexo.extend.filter.register('before_generate', () => {
 </html>
 ```
 
-injector(entry).list(): 获取该注入点的所有注入对象   
-injector(entry).rendered(): 获取并渲染该注入点的所有注入对象（如果value是函数，将执行转化为String）  
-injector(entry).text(): 将该注入点的所有注入内容渲染拼接后返回   
+- injector(entry).list(): 获取该注入点的所有注入对象   
+- injector(entry).rendered(): 获取并渲染该注入点的所有注入对象（如果value是函数，将执行转化为String）  
+- injector(entry).text(): 将该注入点的所有注入内容渲染拼接后返回   
 
 ### stylus injector
 
