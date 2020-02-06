@@ -86,7 +86,7 @@ hexo.extend.filter.register('before_generate', () => {
 
 ### helper
 
-在主题的配置文件中可以使用helper指定注入点，例如
+在主题的布局文件中可以使用helper指定注入点，例如
 
 ```ejs
 <!DOCTYPE html>
@@ -96,7 +96,7 @@ hexo.extend.filter.register('before_generate', () => {
   ...
   <%- injector('head-end').text() -%>
 </head>
-<body itemscope itemtype="http://schema.org/WebPage">
+<body>
   <%- injector('body-begin').text() -%>
   ...
   <%- injector('body-end').text() -%>
@@ -112,7 +112,6 @@ injector(entry).text(): 将该注入点的所有注入内容渲染拼接后返�
 
 如果你的主题使用了hexo-renderer-stylus，可以通过以下方式在stylus中使用injector
 
-any js file in `scripts` dir
 ```js
 const injector = require('hexo-extend-injector2')(hexo);
 injector.loadStylusPlugin();
@@ -134,7 +133,6 @@ injector('style')
 
 NexT主题已经尝试插件化，如果你希望在你的主题中使用它的插件，按下面进行配置
 
-any js file in `scripts` dir
 ```js
 const injector = require('hexo-extend-injector2')(hexo);
 injector.loadNexTPlugin();
