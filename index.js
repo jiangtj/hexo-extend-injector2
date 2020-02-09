@@ -27,7 +27,19 @@ const initInjector = ctx => {
   }
 
   injector.loadStylusPlugin = () => require('./lib/stylus')(ctx, filter, injector);
-  injector.loadNexTPlugin = () => require('./lib/next')(ctx, injector);
+
+  // Compatible with NexT Plugin
+  injector.loadNexTPlugin = () => {
+    cache.apply('loadNexTPlugin', () => {
+      require('./lib/next')(ctx, injector);
+      return true;
+    });
+  }
+  // Compatible with NexT theme or previous Cake theme
+  filter.register('after_init', () => {
+    if (cache.has('loadNexTPlugin')) return;
+    require('./lib/next-compatible')(ctx, injector);
+  })
 
   return injector;
 }
