@@ -17,7 +17,7 @@ const initInjector = ctx => {
 
   const { helper, filter } = ctx.extend;
 
-  helper.register('injector', function (point) {
+  helper.register('injector', function(point) {
     cache.set(`${injector.formatKey(point)}`, true);
     return injector.get(point, { context: this });
   });
@@ -34,14 +34,14 @@ const initInjector = ctx => {
       require('./lib/next')(ctx, injector);
       return true;
     });
-  }
+  };
   // Compatible with NexT theme or previous Cake theme
   filter.register('after_init', () => {
     if (cache.has('loadNexTPlugin')) return;
     require('./lib/next-compatible')(ctx, injector);
-  })
+  });
 
   return injector;
-}
+};
 
 module.exports = initInjector;
