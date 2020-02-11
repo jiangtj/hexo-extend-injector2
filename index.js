@@ -12,7 +12,7 @@ const initInjector = ctx => {
   }
 
   // If not in the main plugin directory, relocate to the main plugin directory
-  let main = resolve(ctx.plugin_dir, 'hexo-extend-injector2')
+  const main = resolve(ctx.plugin_dir, 'hexo-extend-injector2');
   if (main !== __dirname) {
     return require(main)(ctx);
   }
