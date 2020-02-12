@@ -10,14 +10,16 @@ describe('stylus', () => {
     injector.register('style', '../tmp/case1.styl');
     injector.register('style', '../tmp/case2.styl');
     const text = [
-      'title {color: #aaa}',
-      'injector(\'style\')'
+      '@import "../tmp/case-cc.styl"',
+      'title {color: #aaa}\n',
+      'injector(\'style\')\n'
     ].join('\n');
     stylus(text)
       .use(require('../../lib/stylus')(__dirname, injector))
+      .include(__dirname)
       .render((err, css) => {
         if (err) throw err;
-        css.should.eql('title {\n  color: #aaa;\n}\n.book {\n  color: #eee;\n}\nbody {\n  color: #fff;\n}\n');
+        css.should.eql('title {\n  color: #aaa;\n}\n.book {\n  color: #eee;\n}\nbody {\n  color: #abc;\n}\n');
       });
   });
 });
