@@ -11,8 +11,9 @@ describe('stylus', () => {
     injector.register('style', '../tmp/case2.styl');
     const text = [
       '@import "../tmp/case-cc.styl"',
-      'title {color: #aaa}\n',
-      'injector(\'style\')\n'
+      'injector("no-exsit")',
+      'title {color: #aaa}',
+      'injector("style")'
     ].join('\n');
     stylus(text)
       .use(require('../../lib/stylus')(__dirname, injector))
