@@ -37,7 +37,10 @@ const initInjector = ctx => {
     filter.register('after_route_render', require('./lib/filter')(ctx, cache));
   }
 
-  injector.loadStylusPlugin = () => require('./lib/stylus')(ctx, injector);
+  // Load Stylus Plugin
+  injector.loadStylusPlugin = () => {
+    filter.register('stylus:renderer', require('./lib/stylus')(ctx.base_dir, injector));
+  };
 
   // Compatible with NexT Plugin
   injector.loadNexTPlugin = () => {
