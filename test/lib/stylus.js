@@ -16,7 +16,7 @@ describe('stylus', () => {
       'injector("style")'
     ].join('\n');
     stylus(text)
-      .use(require('../../lib/stylus')(__dirname, injector))
+      .use(require('../../lib/stylus-helper')(__dirname, injector))
       .include(__dirname)
       .render((err, css) => {
         if (err) throw err;
