@@ -84,6 +84,10 @@ hexo.extend.filter.register('before_generate', () => {
 });
 ```
 
+### case
+- [hexo-cake-moon-menu](https://github.com/jiangtj-lab/hexo-cake-moon-menu)
+- [hexo-cake-canvas-ribbon](https://github.com/jiangtj-lab/hexo-cake-canvas-ribbon)
+
 ## theme developer
 
 > You need to tell users to install this plugin or copy the plugin code into your theme
@@ -145,3 +149,6 @@ injector.loadNexTPlugin();
 ```
 
 Need to provide [NexT-like injection point](lib/next-point.js)
+
+### case
+- [hexo-theme-cake](https://github.com/jiangtj/hexo-theme-cake)
