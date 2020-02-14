@@ -1,18 +1,29 @@
 # hexo-extend-injector2
 
-为插件提供扩展，能将代码注入到指定位置（如果主题提供相应的注入点）
+为插件或者主题提供扩展，能将代码注入到指定位置（如果主题提供相应的注入点）
 
 ![npm](https://img.shields.io/npm/v/hexo-extend-injector2.svg)
 
-## plugin developer
+这个插件的功能借鉴了原生injector的设计，但由于其无法兼容原本的NexT插件方案，重新设计以提供更多扩展能力，详细见[这个PR](https://github.com/jiangtj/hexo-theme-cake/pull/39)
 
-### install
+## install
 
 ```bash
 yarn add hexo-extend-injector2
 ```
 
-### use
+提供了些额外的配置，当主题不支持时，能更好的兼容
+
+```yml
+injector2:
+  # 渲染stylus注入点内容为单个css文件，默认不启用
+  stylus:
+    enable: true
+    path: 'css/injector.css'
+    points: ['variable', 'mixin', 'style']
+```
+
+## plugin developer
 
 ```js
 const injector = require('hexo-extend-injector2')(hexo);
@@ -123,8 +134,6 @@ injector('style')
 ```
 
 ### NexT plugin
-
-> 未来，NexT 可能调整注入方式
 
 NexT主题已经尝试插件化，如果你希望在你的主题中使用它的插件，按下面进行配置
 

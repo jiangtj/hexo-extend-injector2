@@ -1,20 +1,31 @@
 # hexo-extend-injector2
 
-Provide extensions for plugins to inject code to specified locations (if the theme provides corresponding injection points)
+Provide extensions for plugins or themes to inject code to specified locations (if the theme provides corresponding injection points)
 
 ![npm](https://img.shields.io/npm/v/hexo-extend-injector2.svg)
 
 [中文文档](README-ZH.md)
 
-## plugin developer
+The function of this plugin refers to the design of the native injector, but because it cannot be compatible with the original next plugin scheme, it is redesigned to provide more extension capabilities. For details, see [this PR](https://github.com/jiangtj/hexo-theme-cake/pull/39)
 
-### install
+## install
 
 ```bash
 yarn add hexo-extend-injector2
 ```
 
-### use
+Provides additional configuration for better compatibility when themes are not supported
+
+```yml
+injector2:
+  # Render stylus injection point content as a single CSS file, not enabled by default
+  stylus:
+    enable: true
+    path: 'css/injector.css'
+    points: ['variable', 'mixin', 'style']
+```
+
+## plugin developer
 
 ```js
 const injector = require ('hexo-extend-injector2')(hexo);
@@ -86,7 +97,7 @@ Other injection points need to be provided by the theme developer. This plugin p
 Helper can be used to specify the injection point in the theme's layout file, for example
 
 ```ejs
-<! DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <%- injector('head-begin').text() -%>
@@ -125,8 +136,6 @@ injector('style')
 ```
 
 ### NexT plugin
-
-> In the future, NexT may adjust the injection way
 
 The NexT theme has been tried for plugins. If you want to use its plugin in your theme, configure it as follows
 
