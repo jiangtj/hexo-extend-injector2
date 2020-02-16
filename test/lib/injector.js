@@ -55,4 +55,15 @@ describe('injector', () => {
     injector.get('one').text().should.eql('b');
   });
 
+  it('config', () => {
+    const injector = new Injector();
+    const params = injector.config();
+    params.set('a', 'b');
+    params.get('a').should.eql('b');
+    params.set('o', {'a': 'a', 'b': 'b'});
+    params.deeplyApply('o', {'a': 'c', 'c': 'c'}).should.eql({'a': 'a', 'b': 'b', 'c': 'c'});
+    params.set('o', {'a': 'a', 'b': 'b'});
+    params.deeplyMerge('o', {'a': 'c', 'c': 'c'}).should.eql({'a': 'c', 'b': 'b', 'c': 'c'});
+  });
+
 });
