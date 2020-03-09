@@ -14,15 +14,20 @@ The function of this plugin refers to the design of the native injector, but bec
 yarn add hexo-extend-injector2
 ```
 
-Provides additional configuration for better compatibility when themes are not supported
+Provides some additional configurations (built-in functions)
 
 ```yml
 injector2:
-  # Render stylus injection point content as a single CSS file, not enabled by default
+  # Render stylus injection point content as a single CSS file, not enabled by default (docs see theme developer)
   stylus:
     enable: true
-    path: 'css/injector.css'
-    points: ['variable', 'mixin', 'style']
+    path: css/injector.css
+    points: ['variable', 'style']
+  # terser compress js, and inject into bodyEnd, default enable
+  terser:
+    enable: true
+    path: js/injector.js
+    # options:
 ```
 
 ## plugin developer
@@ -87,6 +92,17 @@ hexo.extend.filter.register('before_generate', () => {
 ### case
 - [hexo-cake-moon-menu](https://github.com/jiangtj-lab/hexo-cake-moon-menu)
 - [hexo-cake-canvas-ribbon](https://github.com/jiangtj-lab/hexo-cake-canvas-ribbon)
+
+## terser
+
+When terser is enabled, the JS content or file injected into the `js` injection point will be compressed into a JS file and injected into the `bodyEnd`
+
+```js
+// you can add JS content directly
+injector.register('js', 'function log1() {console.log("bar");}');
+// if it ends with `.js`, it will be judged as a JS file
+injector.register('js', 'apple.js');
+```
 
 ## theme developer
 

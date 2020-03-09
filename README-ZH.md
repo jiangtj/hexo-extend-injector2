@@ -12,15 +12,20 @@
 yarn add hexo-extend-injector2
 ```
 
-提供了些额外的配置，当主题不支持时，能更好的兼容
+提供了些额外的配置(内置的功能)，提供些扩展能力
 
 ```yml
 injector2:
-  # 渲染stylus注入点内容为单个css文件，默认不启用
+  # 渲染stylus注入点内容为单个css文件，默认不启用（见主题部分）
   stylus:
     enable: true
-    path: 'css/injector.css'
-    points: ['variable', 'mixin', 'style']
+    path: css/injector.css
+    points: ['variable', 'style']
+  # terser 压缩 js，并注入至 bodyEnd 中，默认启用
+  terser:
+    enable: true
+    path: js/injector.js
+    # options:
 ```
 
 ## plugin developer
@@ -80,6 +85,21 @@ hexo.extend.filter.register('before_generate', () => {
     isRun: true
   });
 });
+```
+
+### case
+- [hexo-cake-moon-menu](https://github.com/jiangtj-lab/hexo-cake-moon-menu)
+- [hexo-cake-canvas-ribbon](https://github.com/jiangtj-lab/hexo-cake-canvas-ribbon)
+
+## terser
+
+当 terser 启用时，注入到 `js` 注入点的js内容或者文件，将被压缩至一个js文件，并注入到 `bodyEnd` 中
+
+```js
+// 你可以直接添加js内容
+injector.register('js', 'function log1() {console.log("bar");}');
+// 如果以.js结尾，将会被判断为js文件
+injector.register('js', 'apple.js');
 ```
 
 ## theme developer
@@ -143,3 +163,6 @@ injector.loadNexTPlugin();
 ```
 
 需要提供与[NexT类似的注入点](lib/next-point.js)
+
+### case
+- [hexo-theme-cake](https://github.com/jiangtj/hexo-theme-cake)
