@@ -25,6 +25,7 @@ injector2:
   terser:
     enable: true
     path: js/injector.js
+    hash: false # choose md5 or others e.g. hash: md5
     # options:
 ```
 
@@ -46,7 +47,7 @@ injector.register(entry, {
 entry = 'bodybegin' = 'bodyBegin' = 'body-begin' = 'body_begin'
 
 // value 是注入的内容
-value = 'String' 
+value = 'String'
 // 也可以传入函数，会将注入点位置的上下文对象传入（可能为空）
 value = ctx => `${ctx.page.path}`
 
@@ -130,9 +131,9 @@ injector.register('js', 'apple.js');
 </html>
 ```
 
-- injector(entry).list(): 获取该注入点的所有注入对象   
-- injector(entry).rendered(): 获取并渲染该注入点的所有注入对象（如果value是函数，将执行转化为String）  
-- injector(entry).text(): 将该注入点的所有注入内容渲染拼接后返回   
+- injector(entry).list(): 获取该注入点的所有注入对象
+- injector(entry).rendered(): 获取并渲染该注入点的所有注入对象（如果value是函数，将执行转化为String）
+- injector(entry).text(): 将该注入点的所有注入内容渲染拼接后返回
 
 ### stylus injector
 

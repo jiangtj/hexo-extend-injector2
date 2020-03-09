@@ -27,6 +27,7 @@ injector2:
   terser:
     enable: true
     path: js/injector.js
+    hash: false # choose md5 or others e.g. hash: md5
     # options:
 ```
 
@@ -132,9 +133,9 @@ Helper can be used to specify the injection point in the theme's layout file, fo
 </html>
 ```
 
-- injector(entry).list(): Get all injection objects of this injection point  
-- injector(entry).rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)  
-- injector(entry).text(): render and merge all the injected content of this injection point  
+- injector(entry).list(): Get all injection objects of this injection point
+- injector(entry).rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)
+- injector(entry).text(): render and merge all the injected content of this injection point
 
 ### stylus injector
 
