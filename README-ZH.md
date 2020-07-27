@@ -12,23 +12,6 @@
 yarn add hexo-extend-injector2
 ```
 
-提供了些额外的配置(内置的功能)，提供些扩展能力
-
-```yml
-injector2:
-  # 渲染stylus注入点内容为单个css文件，默认不启用（见主题部分）
-  stylus:
-    enable: true
-    path: css/injector.css
-    points: ['variable', 'style']
-  # terser 压缩 js，并注入至 bodyEnd 中，默认启用
-  terser:
-    enable: true
-    path: js/injector.js
-    hash: false # choose md5 or others e.g. hash: md5
-    # options:
-```
-
 ## plugin developer
 
 ```js
@@ -88,21 +71,6 @@ hexo.extend.filter.register('before_generate', () => {
 });
 ```
 
-### case
-- [hexo-cake-moon-menu](https://github.com/jiangtj-lab/hexo-cake-moon-menu)
-- [hexo-cake-canvas-ribbon](https://github.com/jiangtj-lab/hexo-cake-canvas-ribbon)
-
-## terser
-
-当 terser 启用时，注入到 `js` 注入点的js内容或者文件，将被压缩至一个js文件，并注入到 `bodyEnd` 中
-
-```js
-// 你可以直接添加js内容
-injector.register('js', 'function log1() {console.log("bar");}');
-// 如果以.js结尾，将会被判断为js文件
-injector.register('js', 'apple.js');
-```
-
 ## theme developer
 
 > 你需要告知用户安装这个插件，或者将插件代码拷贝至你的主题
@@ -135,35 +103,48 @@ injector.register('js', 'apple.js');
 - injector(entry).rendered(): 获取并渲染该注入点的所有注入对象（如果value是函数，将执行转化为String）
 - injector(entry).text(): 将该注入点的所有注入内容渲染拼接后返回
 
-### stylus injector
+## bundler
 
-如果你的主题使用了hexo-renderer-stylus，可以通过以下方式在stylus中使用injector
+该插件提供了js与css的bundler，你可以很方便的将js与css添加至主题中
+
+### config
+
+下面是bundler的默认配置
+
+```yml
+injector2:
+  js:
+    enable: true
+    path: js/injector.js
+    hash: false # choose md5 or others e.g. hash: md5
+    options: {}
+  css:
+    enable: true
+    path: css/injector.css
+    options: {}
+```
+
+### API/Example
 
 ```js
-const injector = require('hexo-extend-injector2')(hexo);
-injector.loadStylusPlugin();
+injector.register('js or css', 'content or file path');
+injector.register('js or css', { text: 'content' });
+injector.register('js or css', { path: 'file path' });
+
+// Example
+injector.register('js', 'function log1() {console.log("bar");}');
+injector.register('js', 'apple.js');
+injector.register('css', {text: '.book{font-size:2rem}'});
+injector.register('css', {path: 'xxxx.css'});
 ```
 
-main.styl
-```styl
-@import "_variables/base";
-injector('variable')
-@import "_mixins/base";
-injector('mixin')
-@import "_common/base";
-injector('style')
+## NexT plugin
+
+如果你希望在你的主题中使用NexT主题的插件，启用以下配置（默认启用），如果存在不兼容的插件，可以提交issue
+
+```yml
+injector:
+  load_next_plugin: true
 ```
 
-### NexT plugin
-
-NexT主题已经尝试插件化，如果你希望在你的主题中使用它的插件，按下面进行配置
-
-```js
-const injector = require('hexo-extend-injector2')(hexo);
-injector.loadNexTPlugin();
-```
-
-需要提供与[NexT类似的注入点](lib/next-point.js)
-
-### case
-- [hexo-theme-cake](https://github.com/jiangtj/hexo-theme-cake)
+除此外，主题需要提供与[NexT类似的注入点](lib/next-point.js)，如[Cake](https://github.com/jiangtj/hexo-theme-cake)主题已经添加，但如果是其它主题，你可能需要自己添加它

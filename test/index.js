@@ -6,5 +6,5 @@ const hexo = new Hexo(__dirname, { silent: true });
 
 describe('main', () => {
   require('./lib/injector');
-  require('./lib/stylus');
+  require('./lib/bundler');
 });

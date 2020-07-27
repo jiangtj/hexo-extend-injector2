@@ -14,23 +14,6 @@ The function of this plugin refers to the design of the native injector, but bec
 yarn add hexo-extend-injector2
 ```
 
-Provides some additional configurations (built-in functions)
-
-```yml
-injector2:
-  # Render stylus injection point content as a single CSS file, not enabled by default (docs see theme developer)
-  stylus:
-    enable: true
-    path: css/injector.css
-    points: ['variable', 'style']
-  # terser compress js, and inject into bodyEnd, default enable
-  terser:
-    enable: true
-    path: js/injector.js
-    hash: false # choose md5 or others e.g. hash: md5
-    # options:
-```
-
 ## plugin developer
 
 ```js
@@ -90,21 +73,6 @@ hexo.extend.filter.register('before_generate', () => {
 });
 ```
 
-### case
-- [hexo-cake-moon-menu](https://github.com/jiangtj-lab/hexo-cake-moon-menu)
-- [hexo-cake-canvas-ribbon](https://github.com/jiangtj-lab/hexo-cake-canvas-ribbon)
-
-## terser
-
-When terser is enabled, the JS content or file injected into the `js` injection point will be compressed into a JS file and injected into the `bodyEnd`
-
-```js
-// you can add JS content directly
-injector.register('js', 'function log1() {console.log("bar");}');
-// if it ends with `.js`, it will be judged as a JS file
-injector.register('js', 'apple.js');
-```
-
 ## theme developer
 
 > You need to tell users to install this plugin or copy the plugin code into your theme
@@ -137,35 +105,48 @@ Helper can be used to specify the injection point in the theme's layout file, fo
 - injector(entry).rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)
 - injector(entry).text(): render and merge all the injected content of this injection point
 
-### stylus injector
+## bundler
 
-If your theme uses hexo-renderer-stylus, you can use injector in stylus in the following ways
+The plug-in provides the bundler of JS and CSS, which can be easily added to the theme
+
+### config
+
+The following is the default configuration of the bundler
+
+```yml
+injector2:
+  js:
+    enable: true
+    path: js/injector.js
+    hash: false # choose md5 or others e.g. hash: md5
+    options: {}
+  css:
+    enable: true
+    path: css/injector.css
+    options: {}
+```
+
+### API/Example
 
 ```js
-const injector = require('hexo-extend-injector2')(hexo);
-injector.loadStylusPlugin();
+injector.register('js or css', 'content or file path');
+injector.register('js or css', { text: 'content' });
+injector.register('js or css', { path: 'file path' });
+
+// Example
+injector.register('js', 'function log1() {console.log("bar");}');
+injector.register('js', 'apple.js');
+injector.register('css', {text: '.book{font-size:2rem}'});
+injector.register('css', {path: 'xxxx.css'});
 ```
 
-main.styl
-```styl
-@import "_variables/base";
-injector('variable')
-@import "_mixins/base";
-injector('mixin')
-@import "_common/base";
-injector('style')
+## NexT plugin
+
+If you want to use next theme plug-ins in your theme, enable the following configuration (enabled by default). If there are incompatible plug-ins, you can submit the issue
+
+```yml
+injector:
+  load_next_plugin: true
 ```
 
-### NexT plugin
-
-The NexT theme has been tried for plugins. If you want to use its plugin in your theme, configure it as follows
-
-```js
-const injector = require('hexo-extend-injector2')(hexo);
-injector.loadNexTPlugin();
-```
-
-Need to provide [NexT-like injection point](lib/next-point.js)
-
-### case
-- [hexo-theme-cake](https://github.com/jiangtj/hexo-theme-cake)
+In addition, theme need to provide the injection point similar to [next](lib/next-point.js), such as [cake](https://github.com/jiangtj/hexo-theme-cake) has been added, but if it's another theme, you may need to add it by yourself.
