@@ -40,6 +40,6 @@
     "eslint-config-hexo": "^4.1.0",
     "hexo": "^4.2.0",
     "hexo-renderer-stylus": "^1.1.0",
-    "mocha": "^7.0.1"
+    "mocha": "^8.0.1"
   }
 }
