@@ -138,6 +138,12 @@ injector.register('js', 'function log1() {console.log("bar");}');
 injector.register('js', 'apple.js');
 injector.register('css', {text: '.book{font-size:2rem}'});
 injector.register('css', {path: 'xxxx.css'});
+
+// Alias
+injector.register('variable', { path: 'css file path' });
+//=> injector.register('css', { path: 'css file path', priority: require('hexo-extend-injector2/lib/order').REGISTER_VARIABLE });
+injector.register('style', 'css content');
+//=> injector.register('css', {text: 'css content', priority: require('hexo-extend-injector2/lib/order').REGISTER_STYLE});
 ```
 
 ## NexT plugin
