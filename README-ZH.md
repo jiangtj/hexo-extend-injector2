@@ -116,7 +116,6 @@ injector2:
   js:
     enable: true
     path: js/injector.js
-    hash: false # choose md5 or others e.g. hash: md5
     options: {}
   css:
     enable: true
