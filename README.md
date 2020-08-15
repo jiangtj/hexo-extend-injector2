@@ -130,6 +130,8 @@ injector2:
 ```js
 injector.register('js or css', 'content or file path');
 injector.register('js or css', { text: 'content' });
+injector.register('js or css', { text: () => 'content' });
+injector.register('js or css', { text: new Promise() });
 injector.register('js or css', { path: 'file path' });
 
 // Example
@@ -137,6 +139,9 @@ injector.register('js', 'function log1() {console.log("bar");}');
 injector.register('js', 'apple.js');
 injector.register('css', {text: '.book{font-size:2rem}'});
 injector.register('css', {path: 'xxxx.css'});
+// Lazy
+injector.register('css', {text: () => '.book{font-size:2rem}'});
+injector.register('css', {text: Promise.resolve('.book{font-size:2rem}')});
 
 // Alias
 injector.register('variable', { path: 'css file path' });

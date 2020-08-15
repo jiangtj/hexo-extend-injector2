@@ -29,7 +29,17 @@ describe('bundler', () => {
     injector.register('js', () => 'var a=1;');
     injector.register('js', { text: () => 'var b=1;' });
     const hexo = new Hexo();
-    return bundle(hexo, injector, 'js').then(source => {
+    return bundle(hexo, injector, 'js', ['.js']).then(source => {
+      source.should.eq('var a=1;\nvar b=1;');
+    });
+  });
+
+  it('promise', () => {
+    const injector = new Injector();
+    injector.register('js', { value: Promise.resolve('var a=1;') });
+    injector.register('js', { text: Promise.resolve('var b=1;') });
+    const hexo = new Hexo();
+    return bundle(hexo, injector, 'js', ['.js']).then(source => {
       source.should.eq('var a=1;\nvar b=1;');
     });
   });
