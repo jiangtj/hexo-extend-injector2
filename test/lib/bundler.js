@@ -17,10 +17,39 @@ describe('bundler', () => {
     injector.register('css', { path: resolve(__dirname, 'test2.css') });
     const hexo = new Hexo();
     const config = defaultConfig.css;
-    bundle(hexo, injector, 'css', ['.css', '.sass', '.styl']).then(source => {
+    return bundle(hexo, injector, 'css', ['.css', '.sass', '.styl']).then(source => {
       const output = new CleanCSS(config.options).minify(source);
       if (output.error) throw output.error;
       output.styles.should.eql('a{--color:#6f42c1}body{color:#abc}.book1{color:#0ff}.book2{color:#0ff}');
+    });
+  });
+
+  it('lazyload', () => {
+    const injector = new Injector();
+    injector.register('js', () => 'var a=1;');
+    injector.register('js', { text: () => 'var b=1;' });
+    const hexo = new Hexo();
+    return bundle(hexo, injector, 'js', ['.js']).then(source => {
+      source.should.eq('var a=1;\nvar b=1;');
+    });
+  });
+
+  it('promise', () => {
+    const injector = new Injector();
+    injector.register('js', { value: Promise.resolve('var a=1;') });
+    injector.register('js', { text: Promise.resolve('var b=1;') });
+    const hexo = new Hexo();
+    return bundle(hexo, injector, 'js', ['.js']).then(source => {
+      source.should.eq('var a=1;\nvar b=1;');
+    });
+  });
+
+  it('locals', () => {
+    const injector = new Injector();
+    injector.register('js', { text: ctx => JSON.stringify(ctx.config) });
+    const hexo = new Hexo();
+    return bundle(hexo, injector, 'js').then(source => {
+      source.should.eq(JSON.stringify(hexo.config));
     });
   });
 });

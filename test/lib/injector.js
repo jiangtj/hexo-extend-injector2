@@ -55,4 +55,21 @@ describe('injector', () => {
     injector.get('one').text().should.eql('b');
   });
 
+  it('getSize()', () => {
+    const injector = new Injector();
+    injector.register('one', 'a', () => true, 2, true);
+    injector.register('one', 'b', () => true, 1, false);
+    injector.register('two', 'c', () => true, 1, true);
+    injector.register('three', 'c', () => true, 1, false);
+    injector.getSize('one').should.eql(2);
+    injector.getSize('two').should.eql(1);
+    injector.getSize('three').should.eql(1);
+    injector.getSize('four').should.eql(0);
+    injector.clean();
+    injector.getSize('one').should.eql(1);
+    injector.getSize('two').should.eql(0);
+    injector.getSize('three').should.eql(1);
+    injector.getSize('four').should.eql(0);
+  });
+
 });
