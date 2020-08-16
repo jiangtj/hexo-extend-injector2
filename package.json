@@ -39,7 +39,7 @@
     "eslint": "^7.0.0",
     "eslint-config-hexo": "^4.1.0",
     "hexo": "^5.0.0",
-    "hexo-renderer-stylus": "^1.1.0",
+    "hexo-renderer-stylus": "^2.0.0",
     "mocha": "^8.0.1"
   }
 }
