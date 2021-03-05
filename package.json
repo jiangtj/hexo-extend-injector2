@@ -1,11 +1,12 @@
 {
   "name": "hexo-extend-injector2",
-  "version": "0.2.4",
+  "version": "0.3.0-beta0",
   "description": "🍀 a hexo extend to inject any code into theme.",
   "main": "index.js",
   "scripts": {
     "eslint": "eslint .",
-    "test": "mocha test/index.js"
+    "test": "mocha test/index.js",
+    "p": "yarn --proxy=http://localhost:1080"
   },
   "directories": {
     "lib": "./lib"
@@ -41,5 +42,8 @@
     "hexo": "^5.0.0",
     "hexo-renderer-stylus": "^2.0.0",
     "mocha": "^8.0.1"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }
