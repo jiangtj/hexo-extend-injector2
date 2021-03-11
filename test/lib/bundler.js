@@ -10,12 +10,12 @@ const { resolve } = require('path');
 
 describe('bundler', () => {
   it('basic', () => {
-    const injector = new Injector();
+    const hexo = new Hexo();
+    const injector = new Injector(hexo);
     injector.register('css', 'a{--color: #6f42c1;}');
     injector.register('css', { text: 'body {\n  color: #abc;\n}\n' });
     injector.register('css', resolve(__dirname, 'test1.css'));
     injector.register('css', { path: resolve(__dirname, 'test2.css') });
-    const hexo = new Hexo();
     const config = defaultConfig.css;
     return bundle(hexo, injector, 'css', ['.css', '.sass', '.styl']).then(source => {
       const output = new CleanCSS(config.options).minify(source);
@@ -25,29 +25,29 @@ describe('bundler', () => {
   });
 
   it('lazyload', () => {
-    const injector = new Injector();
+    const hexo = new Hexo();
+    const injector = new Injector(hexo);
     injector.register('js', () => 'var a=1;');
     injector.register('js', { text: () => 'var b=1;' });
-    const hexo = new Hexo();
     return bundle(hexo, injector, 'js', ['.js']).then(source => {
       source.should.eq('var a=1;\nvar b=1;');
     });
   });
 
   it('promise', () => {
-    const injector = new Injector();
+    const hexo = new Hexo();
+    const injector = new Injector(hexo);
     injector.register('js', { value: Promise.resolve('var a=1;') });
     injector.register('js', { text: Promise.resolve('var b=1;') });
-    const hexo = new Hexo();
     return bundle(hexo, injector, 'js', ['.js']).then(source => {
       source.should.eq('var a=1;\nvar b=1;');
     });
   });
 
   it('locals', () => {
-    const injector = new Injector();
-    injector.register('js', { text: ctx => JSON.stringify(ctx.config) });
     const hexo = new Hexo();
+    const injector = new Injector(hexo);
+    injector.register('js', { text: ctx => JSON.stringify(ctx.config) });
     return bundle(hexo, injector, 'js').then(source => {
       source.should.eq(JSON.stringify(hexo.config));
     });

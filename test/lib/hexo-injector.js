@@ -1,5 +1,8 @@
 'use strict';
 
+const Hexo = require('hexo');
+const hexo = new Hexo();
+
 describe('Hexo\'s injector compatible', () => {
   const content = [
     '<!DOCTYPE html>',
@@ -29,6 +32,10 @@ describe('Hexo\'s injector compatible', () => {
   };
   const Injector2 = require('../../lib/injector');
   class Injector extends Injector2 {
+    constructor() {
+      super(hexo);
+    }
+
     get(entry, to = 'default') {
       const options = getLocalsFromType(to);
       return super.get(entry, options).rendered().map(item => item.value);
