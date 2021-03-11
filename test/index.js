@@ -7,5 +7,5 @@ const hexo = new Hexo(__dirname, { silent: true });
 describe('main', () => {
   require('./lib/injector');
   require('./lib/bundler');
-  require('./lib/hexo-injector');
+  require('./lib/hexo-compatible');
 });
