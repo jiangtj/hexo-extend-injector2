@@ -34,7 +34,7 @@ describe('next-inject', () => {
     result.should.eql('abcd');
   });
 
-  it('use injector(point).text() in home', () => {
+  it('use next_inject(point) in home', () => {
     const injector = new Injector(hexo);
     injector.register('body-end', 'a');
     injector.register('body-end', 'b', 'home');
@@ -43,13 +43,22 @@ describe('next-inject', () => {
     result.should.eql('ab');
   });
 
-  it('use injector(point).text() in post', () => {
+  it('use next_inject(point) in post', () => {
     const injector = new Injector(hexo);
     injector.register('body-end', 'a');
     injector.register('body-end', 'b', 'home');
     injector.register('body-end', 'v', injector.is('post'));
     const result = nextInjectHelper(injector, Object.assign({page: {__post: true}}, hexo))('bodyEnd');
     result.should.eql('av');
+  });
+
+  it('next_inject(head) include head and head-end', () => {
+    const injector = new Injector(hexo);
+    injector.register('head', 'a');
+    injector.register('body-end', 'b');
+    injector.register('head-end', 'c');
+    const result = nextInjectHelper(injector, Object.assign({page: {__post: true}}, hexo))('head');
+    result.should.eql('ac');
   });
 
 });
