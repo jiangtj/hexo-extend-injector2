@@ -8,4 +8,8 @@ describe('main', () => {
   require('./lib/injector');
   require('./lib/bundler');
   require('./lib/hexo-compatible');
+  describe('helper', () => {
+    require('./lib/helper/injector');
+    require('./lib/helper/next-inject');
+  });
 });

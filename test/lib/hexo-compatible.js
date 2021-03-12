@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Hexo\'s injector compatible', () => {
+describe('hexo\'s injector compatible', () => {
   const content = [
     '<!DOCTYPE html>',
     '<html lang="en">',
