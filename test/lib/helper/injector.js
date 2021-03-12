@@ -4,10 +4,9 @@ require('chai').should();
 const Injector = require('../../../lib/injector');
 const Hexo = require('hexo');
 const hexo = new Hexo();
+const injectorHelper = require('../../../lib/helper/injector');
 
 describe('injector', () => {
-
-  const injectorHelper = require('../../../lib/helper/injector');
 
   it('injector(point).text()', () => {
     const injector = new Injector(hexo);
