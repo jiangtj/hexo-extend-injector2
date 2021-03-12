@@ -18,6 +18,7 @@ describe('injector', () => {
     injector.register('bodyend', 'c');
     injector.register('body_end', 'd');
     const result = injectorHelper(injector)('body-end').text();
+    injector.config.injector_point_bodyend.should.be.true;
     result.should.eql('abcd');
   });
 
@@ -27,6 +28,7 @@ describe('injector', () => {
     injector.register('body-end', 'b', 'home');
     injector.register('body-end', 'v', injector.is('post'));
     const result = injectorHelper(injector, {page: {__index: true}})('body-end').text();
+    injector.config.injector_point_bodyend.should.be.true;
     result.should.eql('ab');
   });
 
@@ -36,6 +38,7 @@ describe('injector', () => {
     injector.register('body-end', 'b', 'home');
     injector.register('body-end', 'v', injector.is('post'));
     const result = injectorHelper(injector, {page: {__post: true}})('body-end').text();
+    injector.config.injector_point_bodyend.should.be.true;
     result.should.eql('av');
   });
 

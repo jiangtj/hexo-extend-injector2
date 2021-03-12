@@ -31,6 +31,7 @@ describe('next-inject', () => {
     injector.register('bodyend', 'c');
     injector.register('body_end', 'd');
     const result = nextInjectHelper(injector, hexo)('bodyEnd');
+    injector.config.injector_point_bodyend.should.be.true;
     result.should.eql('abcd');
   });
 
@@ -40,6 +41,7 @@ describe('next-inject', () => {
     injector.register('body-end', 'b', 'home');
     injector.register('body-end', 'v', injector.is('post'));
     const result = nextInjectHelper(injector, Object.assign({page: {__index: true}}, hexo))('bodyEnd');
+    injector.config.injector_point_bodyend.should.be.true;
     result.should.eql('ab');
   });
 
@@ -49,6 +51,7 @@ describe('next-inject', () => {
     injector.register('body-end', 'b', 'home');
     injector.register('body-end', 'v', injector.is('post'));
     const result = nextInjectHelper(injector, Object.assign({page: {__post: true}}, hexo))('bodyEnd');
+    injector.config.injector_point_bodyend.should.be.true;
     result.should.eql('av');
   });
 
@@ -58,6 +61,8 @@ describe('next-inject', () => {
     injector.register('body-end', 'b');
     injector.register('head-end', 'c');
     const result = nextInjectHelper(injector, Object.assign({page: {__post: true}}, hexo))('head');
+    injector.config.injector_point_head.should.be.true;
+    injector.config.injector_point_headend.should.be.true;
     result.should.eql('ac');
   });
 
