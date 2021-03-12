@@ -22,4 +22,22 @@ describe('injector', () => {
     result.should.eql('abcd');
   });
 
+  it('use injector(point).text() in home', () => {
+    const injector = new Injector(hexo);
+    injector.register('body-end', 'a');
+    injector.register('body-end', 'b', 'home');
+    injector.register('body-end', 'v', injector.is('post'));
+    const result = injectorHelper(injector, {page: {__index: true}})('body-end').text();
+    result.should.eql('ab');
+  });
+
+  it('use injector(point).text() in post', () => {
+    const injector = new Injector(hexo);
+    injector.register('body-end', 'a');
+    injector.register('body-end', 'b', 'home');
+    injector.register('body-end', 'v', injector.is('post'));
+    const result = injectorHelper(injector, {page: {__post: true}})('body-end').text();
+    result.should.eql('av');
+  });
+
 });
