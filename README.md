@@ -121,7 +121,16 @@ injector2:
     options: {}
   css:
     enable: true
-    path: css/injector.css
+    path:
+      default:
+        link: load
+        path: css/injector/main.css
+      dark:
+        link: preload
+        path: css/injector/dark.css
+      light:
+        link: preload
+        path: css/injector/light.css
     options: {}
 ```
 
@@ -129,25 +138,21 @@ injector2:
 
 ```js
 injector.register('js or css', 'content or file path');
-injector.register('js or css', { text: 'content' });
-injector.register('js or css', { text: () => 'content' });
-injector.register('js or css', { text: new Promise() });
-injector.register('js or css', { path: 'file path' });
 
 // Example
 injector.register('js', 'function log1() {console.log("bar");}');
-injector.register('js', 'apple.js');
-injector.register('css', {text: '.book{font-size:2rem}'});
-injector.register('css', {path: 'xxxx.css'});
-// Lazy
-injector.register('css', {text: () => '.book{font-size:2rem}'});
-injector.register('css', {text: Promise.resolve('.book{font-size:2rem}')});
+injector.register('css', '.book{font-size:2rem}');
 
-// Alias
-injector.register('variable', { path: 'css file path' });
-//=> injector.register('css', { path: 'css file path', priority: require('hexo-extend-injector2/lib/order').REGISTER_VARIABLE });
+// css spec
+// 额外添加了env的选择，如果env不同，那么会打包到不同的css文件下
+// 你需要提前进行配置，默认情况下配置了default、dark和light，如果不设置为default
+injector.register('css', {value: '.book{font-size:2rem}', env: 'dark'});
+
+// css alias
+injector.register('variable', 'css content');
+//=> injector.register('css', {value: 'css content', priority: injector.order.REGISTER_VARIABLE});
 injector.register('style', 'css content');
-//=> injector.register('css', {text: 'css content', priority: require('hexo-extend-injector2/lib/order').REGISTER_STYLE});
+//=> injector.register('css', {value: 'css content', priority: injector.order.REGISTER_STYLE});
 ```
 
 ## NexT plugin

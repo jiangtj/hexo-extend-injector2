@@ -119,22 +119,32 @@ injector2:
     options: {}
   css:
     enable: true
-    path: css/injector.css
+    path:
+      default:
+        link: load
+        path: css/injector/main.css
+      dark:
+        link: preload
+        path: css/injector/dark.css
+      light:
+        link: preload
+        path: css/injector/light.css
     options: {}
 ```
 
 ### API/Example
 
 ```js
-injector.register('js or css', 'content or file path');
-injector.register('js or css', { text: 'content' });
-injector.register('js or css', { path: 'file path' });
+injector.register('js or css', 'content');
 
 // Example
 injector.register('js', 'function log1() {console.log("bar");}');
-injector.register('js', 'apple.js');
-injector.register('css', {text: '.book{font-size:2rem}'});
-injector.register('css', {path: 'xxxx.css'});
+injector.register('css', '.book{font-size:2rem}');
+
+// css spec
+// 额外添加了env的选择，如果env不同，那么会打包到不同的css文件下
+// 你需要提前进行配置，默认情况下配置了default、dark和light，如果不设置为default
+injector.register('css', {value: '.book{font-size:2rem}', env: 'dark'});
 ```
 
 ## NexT plugin
