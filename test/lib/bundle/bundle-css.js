@@ -3,34 +3,32 @@
 require('chai').should();
 const Hexo = require('hexo');
 const Injector = require('../../../lib/injector');
-const jsGenerator = require('../../../lib/bundle/js-generator');
+const cssGenerator = require('../../../lib/bundle/css-generator');
 const { resolve } = require('path');
 
-describe('JS Bundler', () => {
+describe('CSS Bundler', () => {
   it('basic', () => {
     const hexo = new Hexo();
     const injector = new Injector(hexo);
-    require('../../../lib/bundle/js-bundle')(hexo, injector);
-    injector.register('js', 'var a=1;');
-    injector.register('js', 'var b=1;');
+    require('../../../lib/bundle/css-bundle')(hexo, injector);
+    injector.register('css', 'a{--color: #6f42c1;}');
+    injector.register('css', 'body {\n  color: #abc;\n}\n');
 
-    injector.get('bodyend').text().should.eql('<script src="/js/injector.js"></script>');
-    const exec = jsGenerator(injector);
-    return exec().then(result => {
-      result.should.eql('var a=1,b=1;');
-    });
+    injector.get('headend').text().should.eql('<link rel="stylesheet" type="text/css" href="/css/injector/main.css" />');
+    const exec = cssGenerator(injector, 'default');
+    const result = exec();
+    result.should.eql('a{--color:#6f42c1}body{color:#abc}');
   });
 
   it('v0.2 scheme', () => {
     const hexo = new Hexo();
     const injector = new Injector(hexo);
-    require('../../../lib/bundle/js-bundle')(hexo, injector);
-    injector.register('js', { path: resolve(__dirname, 'test.js') });
-    injector.register('js', { text: () => 'var b=1;' });
-    const exec = jsGenerator(injector);
-    return exec().then(result => {
-      result.should.eql('var a=1,b=1;');
-    });
+    require('../../../lib/bundle/css-bundle')(hexo, injector);
+    injector.register('css', { path: resolve(__dirname, 'test.css') });
+    injector.register('css', { text: () => 'body {\n  color: #abc;\n}\n' });
+    const exec = cssGenerator(injector, 'default');
+    const result = exec();
+    result.should.eql('.book1{color:#0ff}body{color:#abc}');
   });
 
 });

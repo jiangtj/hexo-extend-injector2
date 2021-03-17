@@ -12,6 +12,7 @@ describe('main', () => {
   });
   describe('bundler', () => {
     require('./lib/bundle/bundle-js');
+    require('./lib/bundle/bundle-css');
   });
   require('./lib/hexo-compatible');
 });
