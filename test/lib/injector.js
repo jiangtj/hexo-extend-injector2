@@ -74,4 +74,20 @@ describe('injector', () => {
     injector.getSize('four').should.eql(0);
   });
 
+  it('exec filter', () => {
+    const newHexo = new Hexo();
+    const injector = new Injector(newHexo);
+    newHexo.extend.filter.register('injector2:register', data => {
+      data.value += 'x';
+    });
+    newHexo.extend.filter.register('injector2:register-bodyend', data => {
+      data.value += 'bodyend';
+    });
+    injector.register('body-end', 'a');
+    injector.register('body-end', 'b');
+    injector.register('one', 'a', () => true, 2, true);
+    injector.get('bodyend').text().should.eql('axbodyendbxbodyend');
+    injector.get('one').text().should.eql('ax');
+  });
+
 });
