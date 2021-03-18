@@ -6,7 +6,7 @@
 
 这个插件的功能借鉴了原生injector的设计，但由于其无法兼容原本的NexT插件方案，重新设计以提供更多扩展能力，详细见[这个PR](https://github.com/jiangtj/hexo-theme-cake/pull/39)
 
-## install
+## Install
 
 ```bash
 yarn add hexo-extend-injector2
