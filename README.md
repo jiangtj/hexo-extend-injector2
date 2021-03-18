@@ -123,9 +123,11 @@ injector2:
     enable: true
     path:
       default:
+        # Add <link rel="stylesheet" type="text/css" href="${url_for(file.path)}" /> in the head
         link: load
         path: css/injector/main.css
       dark:
+        # Add <link rel="preload" as="style" href="${url_for(file.path)}" /> in the head
         link: preload
         path: css/injector/dark.css
       light:
