@@ -15,9 +15,12 @@ describe('CSS Bundler', () => {
     injector.register('css', 'body {\n  color: #abc;\n}\n');
 
     injector.get('headend').text().should.eql('<link rel="stylesheet" type="text/css" href="/css/injector/main.css" />');
+
     const exec = cssGenerator(injector, 'default');
-    const result = exec();
-    result.should.eql('a{--color:#6f42c1}body{color:#abc}');
+    return exec()
+      .then(result => {
+        result.should.eql('a{--color:#6f42c1}body{color:#abc}');
+      });
   });
 
   it('v0.2 scheme', () => {
@@ -26,9 +29,12 @@ describe('CSS Bundler', () => {
     require('../../../lib/bundle/css-bundle')(hexo, injector);
     injector.register('css', { path: resolve(__dirname, 'test.css') });
     injector.register('css', { text: () => 'body {\n  color: #abc;\n}\n' });
+
     const exec = cssGenerator(injector, 'default');
-    const result = exec();
-    result.should.eql('.book1{color:#0ff}body{color:#abc}');
+    return exec()
+      .then(result => {
+        result.should.eql('.book1{color:#0ff}body{color:#abc}');
+      });
   });
 
   it('dark mode', () => {
@@ -41,12 +47,17 @@ describe('CSS Bundler', () => {
     injector.register('css', {env: 'dark', value: 'book{--color: #aaa;}'});
 
     injector.get('headend').text().should.eql('<link rel="stylesheet" type="text/css" href="/css/injector/main.css" /><link rel="preload" as="style" href="/css/injector/dark.css" />');
+
     let exec = cssGenerator(injector, 'default');
-    let result = exec();
-    result.should.eql('a{--color:#6f42c1}body{color:#abc}');
-    exec = cssGenerator(injector, 'dark');
-    result = exec();
-    result.should.eql('a{--color:#bbb}book{--color:#aaa}');
+    return exec()
+      .then(result => {
+        result.should.eql('a{--color:#6f42c1}body{color:#abc}');
+        exec = cssGenerator(injector, 'dark');
+        return exec();
+      })
+      .then(result => {
+        result.should.eql('a{--color:#bbb}book{--color:#aaa}');
+      });
   });
 
   it('light mode', () => {
@@ -59,12 +70,17 @@ describe('CSS Bundler', () => {
     injector.register('css', {env: 'light', value: 'book{--color: #aaa;}'});
 
     injector.get('headend').text().should.eql('<link rel="stylesheet" type="text/css" href="/css/injector/main.css" /><link rel="preload" as="style" href="/css/injector/light.css" />');
+
     let exec = cssGenerator(injector, 'default');
-    let result = exec();
-    result.should.eql('a{--color:#6f42c1}body{color:#abc}');
-    exec = cssGenerator(injector, 'light');
-    result = exec();
-    result.should.eql('a{--color:#bbb}book{--color:#aaa}');
+    return exec()
+      .then(result => {
+        result.should.eql('a{--color:#6f42c1}body{color:#abc}');
+        exec = cssGenerator(injector, 'light');
+        return exec();
+      })
+      .then(result => {
+        result.should.eql('a{--color:#bbb}book{--color:#aaa}');
+      });
   });
 
 });
