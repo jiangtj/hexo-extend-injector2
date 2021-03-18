@@ -8,7 +8,7 @@ Provide extensions for plugins or themes to inject code to specified locations (
 
 The function of this plugin refers to the design of the native injector, but because it cannot be compatible with the original next plugin scheme, it is redesigned to provide more extension capabilities. For details, see [this PR](https://github.com/jiangtj/hexo-theme-cake/pull/39)
 
-## install
+## Install
 
 ```bash
 yarn add hexo-extend-injector2
