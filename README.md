@@ -143,12 +143,12 @@ injector.register('js or css', 'content or file path');
 injector.register('js', 'function log1() {console.log("bar");}');
 injector.register('css', '.book{font-size:2rem}');
 
-// css spec
-// 额外添加了env的选择，如果env不同，那么会打包到不同的css文件下
-// 你需要提前进行配置，默认情况下配置了default、dark和light，如果不设置为default
+// CSS spec
+// Additional env options are added. If the env is different, it will be packaged into a different CSS file
+// But you need to configure it in advance. default dark and light are set by default, if not set, it will be default
 injector.register('css', {value: '.book{font-size:2rem}', env: 'dark'});
 
-// css alias
+// CSS alias
 injector.register('variable', 'css content');
 //=> injector.register('css', {value: 'css content', priority: injector.order.REGISTER_VARIABLE});
 injector.register('style', 'css content');
