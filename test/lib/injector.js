@@ -2,11 +2,13 @@
 
 require('chai').should();
 const Injector = require('../../lib/injector');
+const Hexo = require('hexo');
+const hexo = new Hexo();
 
 describe('injector', () => {
 
   it('basic', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     injector.register('body-end', 'a');
     injector.register('body-end', 'b');
     injector.get('body-end').list().should.have.lengthOf(2);
@@ -14,20 +16,20 @@ describe('injector', () => {
   });
 
   it('format key', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     const registerKey = 'o n_e-tW o';
     injector.register(registerKey, 'a');
     injector.formatKey(registerKey).should.eql('onetwo');
   });
 
   it('value is function, should render when call rendered', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     injector.register('one', () => 'a');
     injector.get('one').rendered()[0].should.include({value: 'a'});
   });
 
   it('exec predicate', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     const homeEnv = {page: {__index: true}};
     const postEnv = {page: {__post: true}};
     const pageEnv = {page: {__page: true}};
@@ -41,14 +43,14 @@ describe('injector', () => {
   });
 
   it('exec priority', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     injector.register('one', 'a', () => true, 2);
     injector.register('one', 'b', () => true, 1);
     injector.get('one').text().should.eql('ba');
   });
 
   it('should be clean when isRun is true', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     injector.register('one', 'a', () => true, 2, true);
     injector.register('one', 'b', () => true, 1, false);
     injector.clean();
@@ -56,7 +58,7 @@ describe('injector', () => {
   });
 
   it('getSize()', () => {
-    const injector = new Injector();
+    const injector = new Injector(hexo);
     injector.register('one', 'a', () => true, 2, true);
     injector.register('one', 'b', () => true, 1, false);
     injector.register('two', 'c', () => true, 1, true);
@@ -70,6 +72,22 @@ describe('injector', () => {
     injector.getSize('two').should.eql(0);
     injector.getSize('three').should.eql(1);
     injector.getSize('four').should.eql(0);
+  });
+
+  it('exec filter', () => {
+    const newHexo = new Hexo();
+    const injector = new Injector(newHexo);
+    newHexo.extend.filter.register('injector2:register', data => {
+      data.value += 'x';
+    });
+    newHexo.extend.filter.register('injector2:register-bodyend', data => {
+      data.value += 'bodyend';
+    });
+    injector.register('body-end', 'a');
+    injector.register('body-end', 'b');
+    injector.register('one', 'a', () => true, 2, true);
+    injector.get('bodyend').text().should.eql('axbodyendbxbodyend');
+    injector.get('one').text().should.eql('ax');
   });
 
 });

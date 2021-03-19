@@ -8,108 +8,130 @@ Provide extensions for plugins or themes to inject code to specified locations (
 
 The function of this plugin refers to the design of the native injector, but because it cannot be compatible with the original next plugin scheme, it is redesigned to provide more extension capabilities. For details, see [this PR](https://github.com/jiangtj/hexo-theme-cake/pull/39)
 
-## install
+## Install
 
 ```bash
 yarn add hexo-extend-injector2
 ```
 
-## plugin developer
+## Usage
 
-```js
-const injector = require ('hexo-extend-injector2')(hexo);
-
-// There are two ways to write
-injector.register(entry, value, predicate, priority, isRun);
-injector.register(entry, {
-  value: value,
-  predicate: predicate,
-  priority: priority,
-  isRun: true / false
-});
-
-// entry is the injection position, it ignores case and ` ` `-` `_`
-entry = 'bodybegin' = 'bodyBegin' = 'body-begin' = 'body_begin'
-
-// value is the injected content
-value = 'String'
-// You can also provide a function, which will pass a context object at the injection point (may be empty)
-value = ctx => `${ctx.page.path}`
-
-// predicate means that it takes effect in the case, default `() => true`
-predicate = 'home' or 'post' or 'page' or 'archive' or 'category' or 'tag'
-// You can use the built-in is method of the injector, in multiple cases
-predicate = injector.is('home', 'category', ...)
-// You can also provide a function as condition
-predicate = ctx => ctx.is_post()
-
-// priority default is 10
-priority = 10
-
-// isRun is a specially defined parameter. Part of the hexo content is reloaded after the file is changed. When reloading, the content of isRun is true will clear to avoid repeated loading.
-isRun = false / true
-```
-
-### example
+First of all, you need to obtain the injector instance through require. The injectors in the following API are all obtained like this
 
 ```js
 const injector = require('hexo-extend-injector2')(hexo);
-injector.register('body-Begin', '------------');
-injector.register('bodyBegin', 'AAAA', 'home', 11);
-injector.register('bodyBegin', 'BBBB', injector.is('home', 'category'));
-injector.register('bodyBegin', 'CCCC', ctx => ctx.is_post());
-injector.register('bodyBegin', {
-  value: 'DDDD',
-  predicate: ctx => ctx.is_post(),
-  priority: 1
-});
-// if use it in `before_generate` filter, set` isRun` to true
-hexo.extend.filter.register('before_generate', () => {
-  injector.register('bodyBegin', {
-    value: 'isRun',
-    predicate: ctx => ctx.is_post(),
-    isRun: true
-  });
+```
+
+### Register
+
+There are two ways to write
+
+```js
+injector.register(entry, value, predicate, priority, isRun);
+injector.register(entry, {
+  value: value,
+  predicate: predicate,
+  priority: priority,
+  isRun: true/false
 });
 ```
 
-## theme developer
+#### Params
 
-> You need to tell users to install this plugin or copy the plugin code into your theme
+|  attribute   | type  | description  | default  |
+|  :-----  | :----- | :-----  | :-----  |
+| entry  | String | injection position, it ignores case and ` ` `-` `_`, e.g. 'bodybegin' = 'bodyBegin' = 'body-begin' = 'body_begin' | - |
+| value  | String/Function  | injected content, if it is a function, will pass the context and options parameters | - |
+| predicate  | String/Function  | effective conditions, see example for details | `() => true` |
+| priority  | Number  | priority | 10 |
+| isRun  | Boolean  | Part of the content of hexo is reloaded after the file is changed. When reloading, the content of isRun will be cleared to avoid repeated loading. | false |
+
+
+#### Example
+
+1. This is simplest demo, add fontawesome CSS to the head of your site. The following three methods are equivalent
+```js
+injector.register('head-end', '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" crossorigin="anonymous">');
+injector.register('head-end', () => '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" crossorigin="anonymous">');
+injector.register('head-end', {
+  value: '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" crossorigin="anonymous">'
+});
+```
+
+2. Use of Predicate
+```js
+// When you need to inject content on a specific page, you need to use Predicate, which is divided into two ways of writing
+
+// Like the official, specify the layout type, as follows, APlayer will be added to the specific music layout
+injector.register('head_end', () => {
+  return css('https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css');
+}, 'music');
+injector.register('body_end', '<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js">', 'music');
+// Equivalent to using injector.is('home','category', ...), multiple layouts can be passed, and they will take effect at the same time
+injector.register('body_end', '<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js">', injector.is('music'));
+
+// Judging by context or options
+injector.register('head-end', {
+  predicate: (ctx, options) => {
+    // ctx in different situations, the value passed in may be different, 
+    return ctx.page['music'];
+  },
+  value: () => {
+    return css('https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css');
+  }
+});
+```
+
+### Get
 
 By default, only four injection points are provided `head-begin` `head-end` `body-begin` `body-end`, you can set `disable_injector2_default_point` to true to disable
 
-Other injection points need to be provided by the theme developer. This plugin provides some utils to add the addition of injection points.
+In other cases, developers need to use JS API or Hexo Helper to obtain the content stored in the injector, and process it by yourself
 
-### helper
+#### API
 
-Helper can be used to specify the injection point in the theme's layout file, for example
+```js
+const result = injector.get(entry, options);
+```
+
+- result.list(): Get all injection objects of this injection point
+- result.rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)
+- result.text(): render and merge all the injected content of this injection point
+
+Example
+
+```js
+// In bundler, by adding env to determine whether it is the required css content
+injector.get('css', {env: 'dark'});
+// Override the default ctx
+injector.get('point', {context: this});
+```
+
+#### Helper
+
+The injector helper is very similar to injector.get(), but the context is replaced with the local variables of hexo
 
 ```ejs
 <!DOCTYPE html>
 <html>
 <head>
-  <%- injector('head-begin').text() -%>
-  ...
-  <%- injector('head-end').text() -%>
+  <%- injector('head-begin').text() -%>
+  ...
+  <%- injector('head-end').text() -%>
 </head>
 <body>
-  <%- injector('body-begin').text() -%>
-  ...
-  <%- injector('body-end').text() -%>
+  <%- injector('body-begin').text() -%>
+  ...
+  <%- injector('body-end').text() -%>
 </body>
 </html>
 ```
 
-- injector(entry).list(): Get all injection objects of this injection point
-- injector(entry).rendered(): get and render all injection objects of this injection point (if value is a function, it will be converted to String)
-- injector(entry).text(): render and merge all the injected content of this injection point
-
-## bundler
+### bundler
 
 The plug-in provides the bundler of JS and CSS, which can be easily added to the theme
 
-### config
+#### config
 
 The following is the default configuration of the bundler
 
@@ -121,36 +143,43 @@ injector2:
     options: {}
   css:
     enable: true
-    path: css/injector.css
+    path:
+      default:
+        # Add <link rel="stylesheet" type="text/css" href="${url_for(file.path)}" /> in the head
+        link: load
+        path: css/injector/main.css
+      dark:
+        # Add <link rel="preload" as="style" href="${url_for(file.path)}" /> in the head
+        link: preload
+        path: css/injector/dark.css
+      light:
+        link: preload
+        path: css/injector/light.css
     options: {}
 ```
 
-### API/Example
+#### API/Example
 
 ```js
 injector.register('js or css', 'content or file path');
-injector.register('js or css', { text: 'content' });
-injector.register('js or css', { text: () => 'content' });
-injector.register('js or css', { text: new Promise() });
-injector.register('js or css', { path: 'file path' });
 
 // Example
 injector.register('js', 'function log1() {console.log("bar");}');
-injector.register('js', 'apple.js');
-injector.register('css', {text: '.book{font-size:2rem}'});
-injector.register('css', {path: 'xxxx.css'});
-// Lazy
-injector.register('css', {text: () => '.book{font-size:2rem}'});
-injector.register('css', {text: Promise.resolve('.book{font-size:2rem}')});
+injector.register('css', '.book{font-size:2rem}');
 
-// Alias
-injector.register('variable', { path: 'css file path' });
-//=> injector.register('css', { path: 'css file path', priority: require('hexo-extend-injector2/lib/order').REGISTER_VARIABLE });
+// CSS spec
+// Additional env options are added. If the env is different, it will be packaged into a different CSS file
+// But you need to configure it in advance. default dark and light are set by default, if not set, it will be default
+injector.register('css', {value: '.book{font-size:2rem}', env: 'dark'});
+
+// CSS alias
+injector.register('variable', 'css content');
+//=> injector.register('css', {value: 'css content', priority: injector.order.REGISTER_VARIABLE});
 injector.register('style', 'css content');
-//=> injector.register('css', {text: 'css content', priority: require('hexo-extend-injector2/lib/order').REGISTER_STYLE});
+//=> injector.register('css', {value: 'css content', priority: injector.order.REGISTER_STYLE});
 ```
 
-## NexT plugin
+### NexT plugin
 
 If you want to use next theme plug-ins in your theme, enable the following configuration (enabled by default). If there are incompatible plug-ins, you can submit the issue
 
