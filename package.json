@@ -1,6 +1,6 @@
 {
   "name": "hexo-extend-injector2",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "🍀 a hexo extend to inject any code into theme.",
   "main": "index.js",
   "scripts": {
