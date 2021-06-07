@@ -41,7 +41,7 @@
     "eslint-config-hexo": "^4.1.0",
     "hexo": "^5.0.0",
     "hexo-renderer-stylus": "^2.0.0",
-    "mocha": "^8.0.1"
+    "mocha": "^9.0.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
